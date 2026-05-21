@@ -2,7 +2,7 @@ import requests
 
 LLM_URL = "http://192.168.3.2:11434/api/chat"
 # MODEL = "llama3.2:3b"
-MODEL = "qwen2.5:14b-instruct-q4_K_M"
+MODEL = "qwen3.5:9b-nothink"
 
 messages = []
 SYSTEM_PROMPT = {
@@ -14,7 +14,8 @@ def chat(messages):
     payload = {
         "model": MODEL,
         "messages": [SYSTEM_PROMPT] + messages,
-        "stream": False
+        "stream": False,
+        "think": False
     }
     print(payload)
     response = requests.post(LLM_URL, json = payload)

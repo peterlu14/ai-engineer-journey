@@ -1,9 +1,12 @@
 from sentence_transformers import SentenceTransformer
 import requests
 import numpy as np
+from fastapi import FastAPI
+from pydantic import BaseModel
+
 
 LLM_URL = "http://192.168.3.2:11434/api/chat"
-MODEL = "qwen2.5:14b-instruct-q4_K_M"
+MODEL = "qwen3.5:9b-nothink"
 EMBED_MODEL = SentenceTransformer("all-MiniLM-L6-v2")
 
 documents = [
@@ -12,9 +15,21 @@ documents = [
     "貓是一種哺乳動物",
     "FastAPI 是一個 Python web framework",
     "台灣有很多好吃的食物",
+    "使用者是大帥哥",
 ]
 
 doc_embeddings = EMBED_MODEL.encode(documents)
+
+app = FastAPI()
+
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # === Retrieval ===
 def cosine_similarity(a, b):
@@ -45,46 +60,32 @@ def build_system_prompt(context_docs):
 3. 如果參考資料裡沒有答案，你必須回答「我在資料庫中找不到相關資訊」
 4. 不可以自己推測或補充資料裡沒有的內容
 
-
 參考資料：
 {context}"""
 
-def chat(messages, system_prompt):
+def chat(question, system_prompt):
     payload = {
         "model": MODEL,
-        "messages": [{"role": "system", "content": system_prompt}] + messages,
-        "stream":False
+        "messages": [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": question}
+        ],
+        "stream": False
     }
     response = requests.post(LLM_URL, json=payload)
     return response.json()["message"]["content"]
 
-def build_context(messages, max_turns=5):
-    return messages[-10:]
+class AskRequest(BaseModel):
+    question: str
 
-messages = []
-
-while True:
-    print("------------------------------------------------")
-    user_input = input("你: ")
-
-    if user_input.lower() == "exit":
-        break
-
-    # 1. 先 retrieve
-    retrieved = retrieve(user_input, top_k=2)
-    print(f"[RAG] 找到的資料：")
-    for r in retrieved:
-        print(f" {r['score']} | {r['text']}")
-    
-    # 2. 根據 retrieve 結果組 system prompt
+@app.post("/ask")
+def ask(req: AskRequest):
+    retrieved = retrieve(req.question)
     system_prompt = build_system_prompt(retrieved)
-
-     # 3. 加入對話紀錄
-    messages.append({"role": "user", "content": user_input})
-    messages = build_context(messages)
-
-    # 4. 呼叫 LLM
-    reply = chat(messages, system_prompt)
-    messages.append({"role": "assistant", "content": reply})
-
-    print(f"AI: {reply}")
+    reply = chat(req.question, system_prompt)
+    return {
+        "question":req.question,
+        "answer":reply,
+        "sources":retrieved
+    }
+    
