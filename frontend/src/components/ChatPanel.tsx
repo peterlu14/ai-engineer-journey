@@ -26,6 +26,41 @@ export default function ChatPanel() {
     }
   }
 
+    const handleSubmitStream = async function() {
+    //  對話為空，跳過
+    if (!input.trim()) return
+    setLoading(true)
+    setMessages(prev => [...prev, {role: 'user', content: input}])
+    try {
+      const response = await fetch('http://localhost:8010/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json'},
+        body: JSON.stringify({ question: input })
+      })
+      
+      const reader = response.body!.getReader()
+      const decoder = new TextDecoder()
+      setMessages(prev => [...prev, {role: 'assistant', content: ''}])
+      
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        const chunk = decoder.decode(value)
+        console.log('chunk',chunk)
+        setMessages(prev => {
+          const last = prev[prev.length - 1]
+          return [...prev.slice(0, -1), { ...last, content: last.content + chunk }]
+        })
+      }
+    } catch(error) {
+      console.log('caught error:', error)
+      setMessages(prev => [...prev, { role: 'assistant', content: '發生錯誤，請稍後再試' }])
+    } finally {
+      setInput('')
+      setLoading(false)
+    }
+  }
+
   const bottomRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     bottomRef.current?.scrollIntoView()
@@ -62,11 +97,11 @@ export default function ChatPanel() {
             placeholder="輸入問題..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
+            onKeyDown={(e) => e.key === 'Enter' && handleSubmitStream()}
             className="flex-1 bg-gray-800 text-white rounded px-4 py-2 outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
-            onClick={handleSubmit}
+            onClick={handleSubmitStream}
             disabled={loading}
             className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >

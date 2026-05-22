@@ -1,5 +1,6 @@
 FROM python:3.11-slim
 WORKDIR /app
-COPY requirements.txt day6_rag_chroma.py /app/
+COPY requirements.txt day7_rag_chroma_stream.py /app/
 RUN pip install -r requirements.txt
-CMD ["uvicorn", "day6_rag_chroma:app", "--host", "0.0.0.0", "--port", "8010"]
+RUN python -c "import chromadb; client = chromadb.Client(); col = client.create_collection('test'); col.add(documents=['test'], ids=['1'])"
+CMD ["uvicorn", "day7_rag_chroma_stream:app", "--host", "0.0.0.0", "--port", "8010"]
