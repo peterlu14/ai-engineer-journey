@@ -3,7 +3,7 @@ import { useRef, useState, useEffect } from "react"
 export default function ChatPanel() {
   const [input, setInput] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
-  const [messages, setMessages] = useState<Array<{role: 'user'| 'assistant', content: string}>>([])
+  const [messages, setMessages] = useState<Array<{role: 'user'| 'assistant', content: string, sources?: string[]}>>([])
 
   const handleSubmit = async function() {
     //  對話為空，跳過
@@ -17,7 +17,7 @@ export default function ChatPanel() {
         body: JSON.stringify({ question: input })
       })
       const data = await req.json()
-      setMessages(prev => [...prev, {role: 'assistant', content: data.answer}])
+      setMessages(prev => [...prev, {role: 'assistant', content: data.answer, sources: data.sources}])
     } catch(error) {
       setMessages(prev => [...prev, { role: 'assistant', content: '發生錯誤，請稍後再試' }])
     } finally {
@@ -40,6 +40,14 @@ export default function ChatPanel() {
           <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={`max-w-[70%] px-4 py-2 rounded-lg ${msg.role === 'user' ? 'bg-blue-600' : 'bg-gray-800'}`}>
               {msg.content}
+              {msg.sources && msg.sources.length > 0 && (
+                <div className="mt-2 text-xs text-gray-400">
+                  <p>參考來源：</p>
+                  {msg.sources.map((s,i) => (
+                    <p key={i}>{s}</p>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         ))}
