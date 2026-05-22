@@ -1,9 +1,15 @@
+import json
+import logging
+
 import chromadb
 import requests
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
-import json
 from pydantic import BaseModel
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 LLM_URL = "http://192.168.3.2:11434/api/chat"
 MODEL = "qwen3.5:9b-nothink"
@@ -18,17 +24,12 @@ documents = [
     "台灣有很多好吃的食物",
     "使用者是大帥哥",
 ]
-ids=["doc1", "doc2", "doc3", "doc4", "doc5", "doc6"]
+ids = ["doc1", "doc2", "doc3", "doc4", "doc5", "doc6"]
 
-#新增文件
-collection.add(
-    documents=documents,
-    ids=ids
-)
+collection.add(documents=documents, ids=ids)
+logger.info(f"載入 {len(documents)} 筆文件")
 
 app = FastAPI()
-
-from fastapi.middleware.cors import CORSMiddleware
 
 app.add_middleware(
     CORSMiddleware,
@@ -37,13 +38,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# === Retrieval ===
+
 def retrieve(query, top_k=2):
-    result = collection.query(
-        query_texts=[query],
-        n_results = 2
-    )
+    result = collection.query(query_texts=[query], n_results=top_k)
     return result['documents'][0]
+
 
 def build_system_prompt(context_docs):
     context = "\n".join([f"- {doc}" for doc in context_docs])
@@ -58,28 +57,7 @@ def build_system_prompt(context_docs):
 參考資料：
 {context}"""
 
-def chat(question, system_prompt):
-    payload = {
-        "model": MODEL,
-        "messages": [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": question}
-        ],
-        "stream": False
-    }
-    response = requests.post(LLM_URL, json=payload)
-    return response.json()["message"]["content"]
 
-
-"""
-1. for 迴圈開始，iter_lines() 等 Ollama 送第一行
-2. Ollama 送來一行 → iter_lines() 給 for
-3. json.loads 解析
-4. yield data["message"]["content"] → 暫停，把這個字送給 StreamingResponse → 前端收到
-5. StreamingResponse 要下一個 → chat_stream 繼續執行
-6. 回到 for 迴圈，iter_lines() 等 Ollama 送下一行
-7. 重複 2~6，直到 done: true → break
-"""
 def chat_stream(question, system_prompt):
     payload = {
         "model": MODEL,
@@ -97,12 +75,14 @@ def chat_stream(question, system_prompt):
             if data["done"]:
                 break
 
+
 class AskRequest(BaseModel):
     question: str
 
+
 @app.post("/ask")
 def ask(req: AskRequest):
+    logger.info(f"收到問題：{req.question}")
     retrieved = retrieve(req.question)
     system_prompt = build_system_prompt(retrieved)
     return StreamingResponse(chat_stream(req.question, system_prompt), media_type="text/plain")
-    
