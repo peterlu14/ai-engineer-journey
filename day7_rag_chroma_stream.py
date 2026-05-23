@@ -83,6 +83,10 @@ class AskRequest(BaseModel):
 @app.post("/ask")
 def ask(req: AskRequest):
     logger.info(f"收到問題：{req.question}")
-    retrieved = retrieve(req.question)
-    system_prompt = build_system_prompt(retrieved)
-    return StreamingResponse(chat_stream(req.question, system_prompt), media_type="text/plain")
+    try:
+        retrieved = retrieve(req.question)
+        system_prompt = build_system_prompt(retrieved)
+        return StreamingResponse(chat_stream(req.question, system_prompt), media_type="text/plain")
+    except Exception as e:
+        logger.error(f"處理請求失敗：{e}")
+        raise
