@@ -3,8 +3,8 @@ import requests
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-LLM_URL = "http://192.168.3.2:11434/api/chat"
-MODEL = "qwen3.5:9b-nothink"
+LLM_URL = "http://192.168.3.2:8080/v1/chat/completions"
+MODEL = "qwen3.6"
 
 client = chromadb.Client()
 collection = client.create_collection("my_docs")
@@ -66,7 +66,7 @@ def chat(question, system_prompt):
         "stream": False
     }
     response = requests.post(LLM_URL, json=payload)
-    return response.json()["message"]["content"]
+    return response.json()["choices"][0]["message"]["content"]
 
 class AskRequest(BaseModel):
     question: str

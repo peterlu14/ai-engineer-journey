@@ -11,8 +11,8 @@ from pydantic import BaseModel
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-LLM_URL = "http://192.168.3.2:11434/api/chat"
-MODEL = "qwen3.5:9b-nothink"
+LLM_URL = "http://192.168.3.2:8080/v1/chat/completions"
+MODEL = "qwen3.6"
 
 client = chromadb.Client()
 collection = client.create_collection("my_docs")
@@ -49,10 +49,7 @@ def build_system_prompt(context_docs):
     return f"""你是一個有用的助理，請用繁體中文回答。
 
 規則：
-1. 你只能根據下方「參考資料」來回答問題
-2. 不可以使用參考資料以外的知識
-3. 如果參考資料裡沒有答案，你必須回答「我在資料庫中找不到相關資訊」
-4. 不可以自己推測或補充資料裡沒有的內容
+1.你可以任意回答，但是以提到資料庫相關的，需要引用，必回傳引用的部份
 
 參考資料：
 {context}"""
@@ -70,10 +67,15 @@ def chat_stream(question, system_prompt):
     response = requests.post(LLM_URL, json=payload, stream=True)
     for line in response.iter_lines():
         if line:
-            data = json.loads(line)
-            yield data["message"]["content"]
-            if data["done"]:
+            line = line.decode("utf-8") if isinstance(line, bytes) else line
+            if line.startswith("data: "):
+                line = line[6:]
+            if line == "[DONE]":
                 break
+            data = json.loads(line)
+            content = data["choices"][0]["delta"].get("content", "")
+            if content:
+                yield content
 
 
 class AskRequest(BaseModel):

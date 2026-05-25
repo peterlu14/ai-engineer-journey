@@ -1,0 +1,5 @@
+services:
+  fastapi-chromadb:
+    build: .
+    ports: 
+      - "8010:8010"
