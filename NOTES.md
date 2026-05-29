@@ -11,3 +11,4 @@
 | LLM Serving（Ollama, vLLM, 量化, OpenAI API）| [notes/llm_serving.md](notes/llm_serving.md) |
 | 程式語言比較（Python, TS, Rust, Numba）| [notes/languages.md](notes/languages.md) |
 | Rust Pattern（Option, if let, match）| [notes/rust_patterns.md](notes/rust_patterns.md) |
+| LoRA / QLoRA / Fine-tuning 流程 | [notes/lora_qlora.md](notes/lora_qlora.md) |
