@@ -15,6 +15,9 @@
 # 進階思考：如果字串包含 unicode 字元，你的解法還成立嗎？
 
 
+# 複雜度（n = 字串長度）
+#   時間：O(n)   ← 掃過字串常數次
+#   空間：O(1)   ← dict 最多裝 26 個英文字母，大小固定不隨輸入長大
 def is_anagram(s: str, t: str) -> bool:
     d = {}
     if len(s) != len(t):
