@@ -77,7 +77,7 @@
 | Day | 主題 | 檔案 | 狀態 |
 |-----|------|------|------|
 | 8 | Agent tool calling + streaming | day8_agent_tools.py | ✅ |
-| 10 | Multi-step agent loop（多輪工具呼叫） | day10_agent_loop.py | ⬜ |
+| 10 | Multi-step agent loop（多輪工具呼叫） | day10_agent_loop.py | ✅ |
 | 11 | 監控（logging / metrics / tracing） | day11_monitoring.py | ⬜ |
 
 ---
