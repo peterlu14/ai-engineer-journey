@@ -14,3 +14,5 @@
 | LoRA / QLoRA / Fine-tuning 流程 | [notes/lora_qlora.md](notes/lora_qlora.md) |
 | AI Agent（vs Tool Calling、loop 結構）| [notes/agent.md](notes/agent.md) |
 | Python（*args/**kwargs、lambda、dispatch、dict 陷阱）| [notes/python.md](notes/python.md) |
+| 監控 / Observability（logging/metrics/tracing）| [notes/monitoring.md](notes/monitoring.md) |
+| OpenAI API 格式（哪些固定/哪些自己取）| [notes/openai_api_format.md](notes/openai_api_format.md) |
