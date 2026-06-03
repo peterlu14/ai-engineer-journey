@@ -47,13 +47,13 @@
 
 | Day | 主題 | 檔案 | 狀態 |
 |-----|------|------|------|
-| 1 | Ollama CLI assistant（多輪對話） | day1_ai_cli.py | ✅ |
-| 2 | Embedding + cosine similarity | day2_ai_cli_embedding.py | ✅ |
-| 3 | RAG CLI（retrieval + LLM） | day3_ai_cli_rag.py | ✅ |
-| 4 | FastAPI /ask endpoint（含 sources） | day4_ai_cli_rag_api.py | ✅ |
+| 1 | Ollama CLI assistant（多輪對話） | src/day1_ai_cli.py | ✅ |
+| 2 | Embedding + cosine similarity | src/day2_ai_cli_embedding.py | ✅ |
+| 3 | RAG CLI（retrieval + LLM） | src/day3_ai_cli_rag.py | ✅ |
+| 4 | FastAPI /ask endpoint（含 sources） | src/day4_ai_cli_rag_api.py | ✅ |
 | 5 | 前端串接（Vite + React + fetch） | frontend/ | ✅ |
-| 6 | Chroma vector database | day6_rag_chroma.py | ✅ |
-| 7 | Sources 顯示前端，完整 RAG demo | day7_rag_chroma_stream.py | ✅ |
+| 6 | Chroma vector database | src/day6_rag_chroma.py | ✅ |
+| 7 | Sources 顯示前端，完整 RAG demo | src/day7_rag_chroma_stream.py | ✅ |
 
 ---
 
@@ -64,9 +64,9 @@
 | Day | 主題 | 檔案 | 狀態 |
 |-----|------|------|------|
 | - | Docker / docker-compose | Dockerfile, docker-compose.yaml | ✅ |
-| - | Streaming（SSE + ReadableStream） | day7_rag_chroma_stream.py | ✅ |
+| - | Streaming（SSE + ReadableStream） | src/day7_rag_chroma_stream.py | ✅ |
 | - | vLLM 概念、量化、OpenAI API 格式 | notes/llm_serving.md | ✅ |
-| 9 | LoRA / QLoRA fine-tuning | day9_lora_finetune.py | ✅ |
+| 9 | LoRA / QLoRA fine-tuning | src/day9_lora_finetune.py | ✅ |
 
 ---
 
@@ -76,9 +76,9 @@
 
 | Day | 主題 | 檔案 | 狀態 |
 |-----|------|------|------|
-| 8 | Agent tool calling + streaming | day8_agent_tools.py | ✅ |
-| 10 | Multi-step agent loop（多輪工具呼叫） | day10_agent_loop.py | ✅ |
-| 11 | 監控（logging / metrics / tracing） | day11_monitoring.py | ✅ |
+| 8 | Agent tool calling + streaming | src/day8_agent_tools.py | ✅ |
+| 10 | Multi-step agent loop（多輪工具呼叫） | src/day10_agent_loop.py | ✅ |
+| 11 | 監控（logging / metrics / tracing） | src/day11_monitoring.py | ✅ |
 
 ---
 

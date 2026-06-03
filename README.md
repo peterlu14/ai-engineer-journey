@@ -11,11 +11,11 @@
 
 | 領域 | 實作 | 檔案 |
 |------|------|------|
-| **RAG** | Embedding、向量檢索、Chroma、streaming 問答 | `day2`–`day7` |
-| **LLM Serving** | OpenAI 相容 API、本地模型（llama.cpp）、串流 | `day1`, `day7` |
-| **Fine-tuning** | QLoRA（4-bit + LoRA）微調 Qwen2.5 | `day9_lora_finetune.py` |
-| **AI Agent** | Tool / function calling、multi-step loop、dispatch table | `day8`, `day10` |
-| **Observability** | 結構化 logging、latency / loop / 工具呼叫 / 錯誤率指標 | `day11_monitoring.py` |
+| **RAG** | Embedding、向量檢索、Chroma、streaming 問答 | `src/day2`–`day7` |
+| **LLM Serving** | OpenAI 相容 API、本地模型（llama.cpp）、串流 | `src/day1`, `day7` |
+| **Fine-tuning** | QLoRA（4-bit + LoRA）微調 Qwen2.5 | `src/day9_lora_finetune.py` |
+| **AI Agent** | Tool / function calling、multi-step loop、dispatch table | `src/day8`, `day10` |
+| **Observability** | 結構化 logging、latency / loop / 工具呼叫 / 錯誤率指標 | `src/day11_monitoring.py` |
 | **工程化** | FastAPI、Docker / docker-compose、前後端串接 | `Dockerfile`, `frontend/` |
 
 詳細進度見 [ROADMAP.md](ROADMAP.md)。
@@ -25,9 +25,9 @@
 ## 重點實作
 
 - **RAG 問答服務** — FastAPI + Chroma 向量檢索 + SSE streaming，前端 React 即時顯示回答與引用來源
-- **Multi-step Agent** — LLM 自主決定呼叫哪些工具、呼叫幾次，含迴圈上限 guardrail（[day10](day10_agent_loop.py)）
-- **Agent 監控** — `/metrics` 端點輸出 latency、迴圈圈數、各工具使用次數、錯誤率，對應 LLMOps observability（[day11](day11_monitoring.py)）
-- **QLoRA 微調** — 在單張 RTX 3060（12GB）上用 4-bit 量化微調 1.5B 模型（[day9](day9_lora_finetune.py)）
+- **Multi-step Agent** — LLM 自主決定呼叫哪些工具、呼叫幾次，含迴圈上限 guardrail（[day10](src/day10_agent_loop.py)）
+- **Agent 監控** — `/metrics` 端點輸出 latency、迴圈圈數、各工具使用次數、錯誤率，對應 LLMOps observability（[day11](src/day11_monitoring.py)）
+- **QLoRA 微調** — 在單張 RTX 3060（12GB）上用 4-bit 量化微調 1.5B 模型（[day9](src/day9_lora_finetune.py)）
 
 ---
 
