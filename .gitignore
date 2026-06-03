@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# 環境變數
+.env
+.env.local
+
+# 編輯器
+.vscode/
+.idea/

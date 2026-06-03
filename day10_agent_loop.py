@@ -96,8 +96,9 @@ def ask(req: AskRequest):
     #   重複「呼叫 LLM → 有 tool_calls 就執行、結果丟回去 → 再問」
     #   直到 LLM 不再要求工具，回傳最終答案。
     #   記得加一個最大次數上限，避免無限迴圈。
-    for _ in range(10):
+    for i in range(10):
         message = call_llm(messages)
+        print(i , message, messages)
         if message.get('tool_calls'):
             messages.append(message)
             for tool_call in message.get('tool_calls'):
