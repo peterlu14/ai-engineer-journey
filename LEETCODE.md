@@ -24,7 +24,7 @@
 
 ## Two Pointers
 
-- [ ] #125 Valid Palindrome Easy
+- [x] #125 Valid Palindrome Easy
 - [ ] #167 Two Sum II Medium
 - [ ] #15 3Sum Medium
 - [ ] #11 Container With Most Water Medium
