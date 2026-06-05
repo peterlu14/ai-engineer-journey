@@ -12,3 +12,6 @@ venv/
 # 編輯器
 .vscode/
 .idea/
+
+# 個人求職筆記（不公開）
+notes/career_strategy.md
