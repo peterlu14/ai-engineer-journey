@@ -15,3 +15,6 @@ venv/
 
 # 個人求職筆記（不公開）
 notes/career_strategy.md
+
+# LeetCode 個人練習（local 管理，不進 git）
+leetcode/
