@@ -35,9 +35,11 @@
 
 完整筆記索引見 [NOTES.md](NOTES.md)，包含：
 
-- [RAG 架構](notes/rag.md) · [LLM Serving / 量化](notes/llm_serving.md) · [Streaming（SSE）](notes/streaming.md)
+- [Transformer / LLM 原理](notes/transformer_llm.md) · [RAG 架構](notes/rag.md) · [LLM Serving / 量化](notes/llm_serving.md) · [Streaming（SSE）](notes/streaming.md)
 - [LoRA / QLoRA](notes/lora_qlora.md) · [AI Agent](notes/agent.md) · [監控 / Observability](notes/monitoring.md)
 - [OpenAI API 格式](notes/openai_api_format.md) · [Python 重點](notes/python.md) · [Docker](notes/docker.md)
+
+> 📓 **用 Obsidian 閱讀**：把整個 repo 資料夾當成 Obsidian vault 開啟（純 markdown，零設定），即可獲得雙向連結與關係圖。筆記入口是 [NOTES.md](NOTES.md)。
 
 ---
 

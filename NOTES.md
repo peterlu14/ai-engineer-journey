@@ -17,3 +17,4 @@
 | 監控 / Observability（logging/metrics/tracing）| [notes/monitoring.md](notes/monitoring.md) |
 | OpenAI API 格式（哪些固定/哪些自己取）| [notes/openai_api_format.md](notes/openai_api_format.md) |
 | 製造業測試指標（良率 / Cp / Cpk / wafer map）| [notes/manufacturing_metrics.md](notes/manufacturing_metrics.md) |
+| Transformer / LLM 原理（架構、embedding、QKV attention、訓練、手算）| [notes/transformer_llm.md](notes/transformer_llm.md) |
