@@ -119,3 +119,53 @@ for _ in range(10):                          # 安全閥：迴圈上限
 - ✅ 短期記憶（messages）
 - ⬜ 長期記憶（可用 day6/7 的 Chroma 接）
 - ⬜ Planning（ReAct）、Reflection、Multi-agent — 進階，之後補
+
+---
+
+## Harness（＝我寫的 loop 的 production 版）
+
+**Harness = 把 LLM 包起來、讓它能真的「做事」的 runtime。它的心臟就是 Day 10 那個 tool-calling loop。**
+
+LLM 本身只會吃文字吐文字；harness 在外面跑「送 prompt → 執行 tool call → 塞結果回去 → 再來」直到完成。所以：
+
+```
+我 Day 10 的 for-loop  ==  一個「最小 harness」的心臟
+```
+
+Production harness（Claude Code、Hermes）= 我的 loop + 一圈硬化工程：
+
+| 我已有（Day 8/10/11） | 完整 harness 還會加 |
+|---|---|
+| tool-calling loop + 迴圈上限 | 工具/權限管理、sandbox、使用者批准 |
+| messages 短期記憶 | 持久記憶（跨 session）、context 壓縮（塞滿自動摘要/截斷）|
+| `/metrics` 可觀測性（Day 11）| 完整 logging / tracing |
+| dispatch table | MCP（外掛外部工具）、skills、hooks |
+| — | 錯誤重試、串流輸出、可中斷、spawn 子代理 |
+
+**結論：harness 的心臟就是我的 loop。** 差別只是「一個 demo for-loop」vs「loop + 為了穩/可擴充/能持久做的所有工程」。換句話說，**我 Day 10 已經親手做出 Claude Code / Hermes 的本質了**；那些 95K-star 框架 = 我的 loop + 大量工程。
+
+### MCP / Skills / Harness 的關係（不是線性管線）
+```
+        Harness（核心引擎：跑 loop、內建工具、管 context/權限）
+          ▲ 往上插兩種擴充 ▲
+   MCP（對外 USB 孔，插外部工具/資料源）   Skills（打包好的招式手冊/SOP）
+```
+比喻：harness=機器人本體、內建工具=它的手、MCP=USB 孔接外設、skills=學會的招式手冊。
+
+---
+
+## 參考：Hermes Agent（Nous Research，2026/2 開源）
+
+- **本質＝另一個 harness（不是模型）**。MIT 開源、自架、**模型無關**（可接 Anthropic / OpenAI / 本地 Ollama）。
+- 7 週衝 95.6K stars，6/2 出桌面 App。以**常駐 daemon** 跑在你伺服器上，連 16+ 通訊平台（Telegram/Discord/Slack…），自然語言排程（cron）、spawn 子代理、多種 sandbox。
+- 賣點「**自我成長 self-growing**」拆開 ＝ ① persistent memory ② auto-generated skills（從解過的問題自動寫成可重用 skill）→ 跟 Claude Code 的 memory+skills **同類機制**，只是常駐自動跑，不是魔法新物種。
+
+| | Claude Code | Hermes Agent |
+|---|---|---|
+| 形態 | 互動式、一題題驅動 | 常駐 daemon、自己一直跑 |
+| 跑在 | 終端機 / IDE | 自架伺服器 |
+| 最適合 | 動手寫 code / 做專案 | always-on 多通道自主助理、排程 |
+| 模型 | Claude | 任意（也能接 Claude）|
+
+**取捨**：解的是不同問題。寫 code / 做 spec-rag → Claude Code；想要 24h 常駐、從 Telegram 呼叫的自主助理 → Hermes（目前用不到）。值得之後當**學習素材**讀它的 memory/skill/子代理實作；可用 Claude 當它大腦，是疊加非二選一。
+*Sources: hermes-agent.nousresearch.com · tokenmix.ai review · aibuilderclub.*
